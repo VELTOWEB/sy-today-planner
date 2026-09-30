@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "서윤의 오늘",
+  "short_name": "오늘",
+  "description": "여서윤이 매일 사용하는 개인 하루 계획 앱",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#faf7f8",
+  "theme_color": "#faf7f8",
+  "categories": ["productivity", "lifestyle"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

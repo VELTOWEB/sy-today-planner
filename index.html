@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#faf7f8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="오늘">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="여서윤이 매일 사용하는 개인 하루 계획 PWA">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>서윤의 오늘</title>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <main class="app-main" id="appMain" tabindex="-1">
+      <section class="view view--active" id="todayView" data-view-panel="today" aria-labelledby="todayHeading">
+        <header class="page-header page-header--home">
+          <div class="header-copy">
+            <p class="eyebrow" id="todayDateLabel">오늘</p>
+            <h1 id="todayHeading">서윤님의 오늘</h1>
+            <p class="subtle" id="todayGreeting">좋은 하루 보내세요.</p>
+          </div>
+          <button class="avatar-button" type="button" data-open-profile aria-label="프로필 및 설정 열기"><span>서윤</span></button>
+        </header>
+
+        <section class="hero-summary" aria-labelledby="todaySummaryTitle">
+          <div class="summary-topline">
+            <div>
+              <p class="section-kicker">오늘 요약</p>
+              <h2 id="todaySummaryTitle"><span id="todayCompletedCount">0</span>개 완료</h2>
+            </div>
+            <strong id="todayProgressPercent">0%</strong>
+          </div>
+          <p class="summary-message" id="todaySummaryMessage">오늘 할 일을 추가해보세요.</p>
+          <div class="progress-track" aria-hidden="true"><span id="todayProgressBar"></span></div>
+        </section>
+
+        <section class="content-section core-section" aria-labelledby="coreTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">FOCUS</p>
+              <h2 id="coreTitle">오늘의 핵심</h2>
+            </div>
+            <span class="section-meta" id="coreCount">0/3</span>
+          </div>
+          <div class="core-list" id="coreList" aria-live="polite"></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="todayTasksTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">TO-DO</p>
+              <h2 id="todayTasksTitle">오늘 할 일</h2>
+            </div>
+            <span class="section-meta" id="todayTaskCount">0개</span>
+          </div>
+          <div class="task-list" id="todayTaskList" aria-live="polite"></div>
+          <form class="quick-add" id="todayTaskForm" autocomplete="off">
+            <label class="sr-only" for="todayTaskInput">오늘 할 일 추가</label>
+            <input id="todayTaskInput" name="task" type="text" maxlength="160" placeholder="할 일을 입력하세요" enterkeyhint="done">
+            <button type="submit" aria-label="할 일 추가">추가</button>
+          </form>
+        </section>
+
+        <section class="content-section compact-section" aria-labelledby="todayRoutineTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">ROUTINE</p>
+              <h2 id="todayRoutineTitle">오늘 루틴</h2>
+            </div>
+            <button class="inline-link" type="button" data-go-view="routine">전체 보기</button>
+          </div>
+          <div class="routine-quick-list" id="todayRoutineList"></div>
+        </section>
+
+        <section class="content-section focus-section" aria-labelledby="focusTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">FOCUS TIMER</p>
+              <h2 id="focusTitle">집중</h2>
+            </div>
+            <button class="inline-link" id="focusDurationButton" type="button">25분</button>
+          </div>
+          <div class="focus-card">
+            <button class="focus-task-selector" id="focusTaskButton" type="button">
+              <span class="focus-task-label">집중할 일</span>
+              <strong id="focusTaskText">할 일을 선택하지 않았어요</strong>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <div class="focus-timer" id="focusTimer" aria-live="polite">25:00</div>
+            <div class="focus-actions">
+              <button class="button button--primary" id="focusStartButton" type="button">시작</button>
+              <button class="button button--secondary" id="focusResetButton" type="button">초기화</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="notesTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">QUICK NOTE</p>
+              <h2 id="notesTitle">빠른 메모</h2>
+            </div>
+            <span class="section-meta" id="noteCount">0개</span>
+          </div>
+          <div class="note-list" id="noteList"></div>
+          <form class="quick-add quick-add--note" id="noteForm" autocomplete="off">
+            <label class="sr-only" for="noteInput">빠른 메모 추가</label>
+            <input id="noteInput" name="note" type="text" maxlength="240" placeholder="생각나는 내용을 짧게 적어보세요" enterkeyhint="done">
+            <button type="submit" aria-label="메모 추가">추가</button>
+          </form>
+        </section>
+
+        <section class="content-section reflection-section" aria-labelledby="reflectionTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker">END OF DAY</p>
+              <h2 id="reflectionTitle">하루 마무리</h2>
+            </div>
+            <span class="save-status" id="reflectionSaveStatus" aria-live="polite"></span>
+          </div>
+          <p class="reflection-question">오늘 하루는 어땠나요?</p>
+          <div class="mood-picker" id="moodPicker" role="radiogroup" aria-label="오늘 기분">
+            <button type="button" class="mood-option" data-mood="good" role="radio" aria-checked="false"><span class="mood-emoji">😊</span><span>좋음</span></button>
+            <button type="button" class="mood-option" data-mood="normal" role="radio" aria-checked="false"><span class="mood-emoji">😐</span><span>보통</span></button>
+            <button type="button" class="mood-option" data-mood="sad" role="radio" aria-checked="false"><span class="mood-emoji">😞</span><span>아쉬움</span></button>
+          </div>
+          <label class="field-label" for="journalInput">한 줄 기록</label>
+          <input class="line-input" id="journalInput" type="text" maxlength="180" placeholder="오늘을 한 줄로 남겨보세요" enterkeyhint="done">
+        </section>
+
+        <section class="tomorrow-section" aria-labelledby="tomorrowTitle">
+          <div>
+            <p class="section-kicker">TOMORROW</p>
+            <h2 id="tomorrowTitle">내일 준비하기</h2>
+            <p id="tomorrowHint">내일의 첫 할 일을 미리 정해보세요.</p>
+          </div>
+          <button class="round-arrow-button" id="prepareTomorrowButton" type="button" aria-label="내일 준비하기 열기">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </button>
+        </section>
+      </section>
+
+      <section class="view" id="calendarView" data-view-panel="calendar" aria-labelledby="calendarTitle" hidden>
+        <header class="page-header">
+          <div class="header-copy">
+            <p class="eyebrow">캘린더</p>
+            <h1 id="calendarTitle">월간 계획</h1>
+            <p class="subtle">날짜를 눌러 계획을 확인하고 추가하세요.</p>
+          </div>
+          <button class="avatar-button" type="button" data-open-profile aria-label="프로필 및 설정 열기"><span>서윤</span></button>
+        </header>
+
+        <section class="calendar-card" aria-label="월간 달력">
+          <div class="calendar-toolbar">
+            <button class="icon-button" id="prevMonthButton" type="button" aria-label="이전 달"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button class="month-label" id="calendarMonthLabel" type="button" aria-label="현재 월로 돌아가기">2026년 9월</button>
+            <button class="icon-button" id="nextMonthButton" type="button" aria-label="다음 달"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+          <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="날짜 선택"></div>
+          <button class="calendar-today-button" id="goTodayButton" type="button">오늘로 이동</button>
+        </section>
+
+        <section class="content-section selected-day-section" aria-labelledby="selectedDateTitle">
+          <div class="section-heading-row">
+            <div>
+              <p class="section-kicker" id="selectedDateYear">선택한 날짜</p>
+              <h2 id="selectedDateTitle">9월 30일</h2>
+            </div>
+            <span class="section-meta" id="selectedTaskCount">0개</span>
+          </div>
+          <div class="task-list" id="selectedTaskList" aria-live="polite"></div>
+          <form class="quick-add" id="selectedTaskForm" autocomplete="off">
+            <label class="sr-only" for="selectedTaskInput">선택 날짜 할 일 추가</label>
+            <input id="selectedTaskInput" name="task" type="text" maxlength="160" placeholder="이 날짜에 할 일 추가" enterkeyhint="done">
+            <button type="submit">추가</button>
+          </form>
+        </section>
+      </section>
+
+      <section class="view" id="routineView" data-view-panel="routine" aria-labelledby="routineTitle" hidden>
+        <header class="page-header">
+          <div class="header-copy">
+            <p class="eyebrow">루틴</p>
+            <h1 id="routineTitle">작은 반복</h1>
+            <p class="subtle">꾸준히 하고 싶은 것만 간단하게 관리해요.</p>
+          </div>
+          <button class="avatar-button" type="button" data-open-profile aria-label="프로필 및 설정 열기"><span>서윤</span></button>
+        </header>
+
+        <section class="routine-summary" aria-label="이번 주 루틴 요약">
+          <div><p>이번 주</p><strong id="routineWeeklyPercent">0%</strong></div>
+          <div class="progress-track"><span id="routineWeeklyBar"></span></div>
+          <p id="routineWeeklyText">루틴을 추가하면 진행률을 볼 수 있어요.</p>
+        </section>
+
+        <section class="content-section" aria-labelledby="routineListTitle">
+          <div class="section-heading-row">
+            <div><p class="section-kicker">MY ROUTINES</p><h2 id="routineListTitle">내 루틴</h2></div>
+            <button class="small-add-button" id="addRoutineButton" type="button"><span>+</span> 추가</button>
+          </div>
+          <div class="routine-list" id="routineList"></div>
+        </section>
+      </section>
+
+      <section class="view" id="recordsView" data-view-panel="records" aria-labelledby="recordsTitle" hidden>
+        <header class="page-header">
+          <div class="header-copy">
+            <p class="eyebrow">기록</p>
+            <h1 id="recordsTitle">지난 하루</h1>
+            <p class="subtle">완료한 일과 짧은 기록을 가볍게 돌아봐요.</p>
+          </div>
+          <button class="avatar-button" type="button" data-open-profile aria-label="프로필 및 설정 열기"><span>서윤</span></button>
+        </header>
+
+        <section class="weekly-summary" aria-labelledby="weeklySummaryTitle">
+          <div class="section-heading-row section-heading-row--compact">
+            <div><p class="section-kicker">THIS WEEK</p><h2 id="weeklySummaryTitle">이번 주</h2></div>
+            <span class="week-range" id="weekRange"></span>
+          </div>
+          <div class="weekly-stats">
+            <div><span>완료한 할 일</span><strong id="weeklyTaskCount">0</strong></div>
+            <div><span>루틴 완료율</span><strong id="weeklyRoutinePercent">—</strong></div>
+            <div><span>가장 많이 한 날</span><strong id="weeklyBestDay">—</strong></div>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="recordListTitle">
+          <div class="section-heading-row"><div><p class="section-kicker">HISTORY</p><h2 id="recordListTitle">하루 기록</h2></div></div>
+          <div class="record-list" id="recordList"></div>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="주요 메뉴">
+      <button class="nav-item nav-item--active" type="button" data-view="today" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3h9A2.5 2.5 0 0 1 19 5.5v13A2.5 2.5 0 0 1 16.5 21h-9A2.5 2.5 0 0 1 5 18.5v-13Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>오늘</span></button>
+      <button class="nav-item" type="button" data-view="calendar"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M7 2v4m10-4v4M3 9h18"/></svg><span>캘린더</span></button>
+      <button class="nav-item" type="button" data-view="routine"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 5h12M6 12h12M6 19h12"/><path d="m3.5 5 .8.8 1.4-1.7m-2.2 8 .8.8 1.4-1.7m-2.2 8 .8.8 1.4-1.7"/></svg><span>루틴</span></button>
+      <button class="nav-item" type="button" data-view="records"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>기록</span></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-header"><h2 id="modalTitle">확인</h2><button class="icon-button" id="modalCloseButton" type="button" aria-label="닫기"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </section>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./js/storage.js" defer></script>
+  <script src="./js/calendar.js" defer></script>
+  <script src="./js/timer.js" defer></script>
+  <script src="./js/app.js" defer></script>
+</body>
+</html>
